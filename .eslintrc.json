@@ -1,0 +1,19 @@
+{
+  "extends": [
+    "plugin:react/recommended",
+    "prettier/react"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "node": true
+  }
+}
