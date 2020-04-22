@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 
 import { SpotifyContext } from "../../contexts/Spotify";
+import { Search } from "../../components/Search";
 
 const Master = () => {
   const spotifyContext = useContext(SpotifyContext);
@@ -11,6 +12,7 @@ const Master = () => {
   const [sessionName, setSessionName] = useState("");
   const [playlistId, setPlaylistId] = useState("");
   const [playlists, setPlaylists] = useState([]);
+  const [tracks, setTracks] = useState([]);
 
   useEffect(() => {
     const [, code] =
@@ -45,6 +47,13 @@ const Master = () => {
   const selectPlaylist = (id) => {
     setPlaylistId(id);
     spotifyContext.setCurrentPlaylist(id);
+    spotifyContext.getTracks(playlistId).then((tracks) => setTracks(tracks));
+  };
+
+  const removeTrack = (uri) => {
+    spotifyContext.removeTrack(uri).then(() => {
+      spotifyContext.getTracks(playlistId).then((tracks) => setTracks(tracks));
+    });
   };
 
   return (
@@ -75,6 +84,22 @@ const Master = () => {
             )
           )}
         </div>
+      </div>
+      <div className="Step Manage-Tracks">
+        {tracks.map((track) => (
+          <div key={track.id}>
+            {track.name}{" "}
+            <button onClick={() => removeTrack(track.uri)}>Remove</button>
+          </div>
+        ))}
+        <Search
+          excludedTracks={tracks}
+          addTrackCallback={() =>
+            spotifyContext
+              .getTracks(playlistId)
+              .then((tracks) => setTracks(tracks))
+          }
+        />
       </div>
     </div>
   );
