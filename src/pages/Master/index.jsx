@@ -1,7 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
+import { v4 } from "uuid";
 
 import { SpotifyContext } from "../../contexts/Spotify";
-import { Search } from "../../components/Search";
+import { CreateOrSelectPlaylist } from "./steps/CreateOrSelectPlaylist";
+import { STEPS } from "./constants";
+import { ManageTracks } from "./steps/ManageTracks";
+import { ManageSession } from "./steps/ManageSession";
+import { StepsNavigation } from "./components/StepsNavigation";
+
+const SESSION_UUID = v4();
 
 const Master = () => {
   const spotifyContext = useContext(SpotifyContext);
@@ -9,10 +16,14 @@ const Master = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     spotifyContext.isAuthenticated
   );
-  const [sessionName, setSessionName] = useState("");
-  const [playlistId, setPlaylistId] = useState("");
-  const [playlists, setPlaylists] = useState([]);
-  const [tracks, setTracks] = useState([]);
+
+  const [playlistId, setPlaylistId] = useState(
+    sessionStorage.getItem("playlistId") || ""
+  );
+
+  const [step, setStep] = useState(
+    sessionStorage.getItem("step") || STEPS.CREATE_OR_SELECT_PLAYLIST
+  );
 
   useEffect(() => {
     const [, code] =
@@ -32,75 +43,26 @@ const Master = () => {
         setIsAuthenticated(true);
       });
     }
-  }, []);
-
-  useEffect(() => {
-    spotifyContext.getPlaylists().then((playlists) => setPlaylists(playlists));
-  }, [isAuthenticated]);
-
-  const createPlaylist = () => {
-    spotifyContext
-      .createPlaylist(sessionName)
-      .then(({ id }) => setPlaylistId(id));
-  };
-
-  const selectPlaylist = (id) => {
-    setPlaylistId(id);
-    spotifyContext.setCurrentPlaylist(id);
-    spotifyContext.getTracks(playlistId).then((tracks) => setTracks(tracks));
-  };
-
-  const removeTrack = (uri) => {
-    spotifyContext.removeTrack(uri).then(() => {
-      spotifyContext.getTracks(playlistId).then((tracks) => setTracks(tracks));
-    });
-  };
+  }, [spotifyContext, isAuthenticated]);
 
   return (
     <div>
       <p>New session</p>
-      <div className="Step Create-Or-Select-Playlist">
-        <div className="Create-Playlist">
-          <span>Create a new playlist :</span>
-          <input
-            type="text"
-            value={sessionName}
-            onChange={({ currentTarget: { value } }) => setSessionName(value)}
-          />
-          <button onClick={createPlaylist}>Create the playlist</button>
-        </div>
-        <div className="Select-Playlist">
-          <span>Choose an existing playlist :</span>
-          {playlists.map((playlist) =>
-            playlist.id === playlistId ? (
-              <span key={playlist.id}>{playlist.name}</span>
-            ) : (
-              <button
-                key={playlist.id}
-                onClick={() => selectPlaylist(playlist.id)}
-              >
-                {playlist.name}
-              </button>
-            )
-          )}
-        </div>
-      </div>
-      <div className="Step Manage-Tracks">
-        {tracks.map((track) => (
-          <div key={track.id}>
-            {track.name}{" "}
-            <button onClick={() => removeTrack(track.uri)}>Remove</button>
-          </div>
-        ))}
-        <Search
-          excludedTracks={tracks}
-          addTrackCallback={() =>
-            spotifyContext
-              .getTracks(playlistId)
-              .then((tracks) => setTracks(tracks))
-          }
+      {step.name === STEPS.CREATE_OR_SELECT_PLAYLIST.name && (
+        <CreateOrSelectPlaylist
+          playlistId={playlistId}
+          setPlaylistId={setPlaylistId}
+          setStep={setStep}
+          isAuthenticated={isAuthenticated}
         />
-      </div>
+      )}
+      {step.name === STEPS.MANAGE_TRACKS.name && (
+        <ManageTracks playlistId={playlistId} />
+      )}
+      {step.name === STEPS.MANAGE_SESSION.name && (
+        <ManageSession sessionUuid={SESSION_UUID} />
+      )}
+      <StepsNavigation currentStep={step} setStep={setStep} />
     </div>
   );
 };

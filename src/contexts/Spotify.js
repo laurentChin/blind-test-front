@@ -4,13 +4,23 @@ const SPOTIFY_CODE_PARAM = /\?code=(.+)/;
 
 const redirectUri = `${window.location.origin}${window.location.pathname}`;
 
+const scopes = [
+  "user-modify-playback-state",
+  "playlist-modify-private",
+  "playlist-read-private",
+  "playlist-modify-public",
+  "streaming",
+  "user-read-private",
+  "user-read-email",
+];
+
 const startTokenRequestUri = `${
   process.env.REACT_APP_SPOTIFY_AUTHORIZE_ENDPOINT
 }?client_id=${
   process.env.REACT_APP_SPOTIFY_CLIENT_ID
 }&response_type=code&redirect_uri=${encodeURIComponent(
   redirectUri
-)}&scope=user-modify-playback-state playlist-modify-private playlist-read-private playlist-modify-public`;
+)}&scope=${scopes.join(" ")}`;
 
 let authTokenList =
   JSON.parse(sessionStorage.getItem("spotifyTokenList")) || {};
@@ -26,6 +36,8 @@ let authorizationHeader = {
 };
 
 let currentPlaylist = "";
+let player = {};
+let playerStateChangeCb = () => {};
 
 async function getAccessToken(code) {
   const { access_token, refresh_token, expires_in } = await (
@@ -152,6 +164,42 @@ async function removeTrack(uri) {
   ).json();
 }
 
+function setupPlayer(playerReadyCb) {
+  player = new window.Spotify.Player({
+    name: "Blind Test Spotify Player",
+    getOAuthToken: (cb) => cb(authTokenList.accessToken),
+  });
+
+  player.addListener("player_state_changed", (state) => {
+    playerStateChangeCb(state);
+  });
+
+  player.addListener("ready", ({ device_id }) => {
+    playerReadyCb(device_id);
+  });
+
+  player.connect();
+
+  return player;
+}
+
+function setPlayerStateChangeCb(cb) {
+  playerStateChangeCb = cb;
+}
+
+async function startPlayer(deviceID) {
+  await fetch(
+    `${process.env.REACT_APP_SPOTIFY_API_ENDPONT}/me/player/play?device_id=${deviceID}`,
+    {
+      method: "PUT",
+      headers: { ...authorizationHeader },
+      body: JSON.stringify({
+        context_uri: `spotify:playlist:${currentPlaylist}`,
+      }),
+    }
+  );
+}
+
 const SpotifyContext = createContext({
   SPOTIFY_CODE_PARAM,
   redirectUri,
@@ -166,6 +214,10 @@ const SpotifyContext = createContext({
   addTrack,
   removeTrack,
   search,
+  setupPlayer,
+  player,
+  setPlayerStateChangeCb,
+  startPlayer,
 });
 
 export { SpotifyContext };
