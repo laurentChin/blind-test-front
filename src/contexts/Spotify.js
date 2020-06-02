@@ -183,6 +183,10 @@ function setupPlayer(playerReadyCb) {
   return player;
 }
 
+function getPlayer() {
+  return player;
+}
+
 function setPlayerStateChangeCb(cb) {
   playerStateChangeCb = cb;
 }
@@ -215,7 +219,7 @@ const SpotifyContext = createContext({
   removeTrack,
   search,
   setupPlayer,
-  player,
+  getPlayer,
   setPlayerStateChangeCb,
   startPlayer,
 });

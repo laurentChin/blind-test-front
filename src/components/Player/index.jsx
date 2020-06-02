@@ -2,11 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { SpotifyContext } from "../../contexts/Spotify";
 
 const Player = () => {
-  const { player, setPlayerStateChangeCb } = useContext(SpotifyContext);
+  const { getPlayer, setPlayerStateChangeCb } = useContext(SpotifyContext);
 
   const [state, setState] = useState({});
   const [currentTrack, setCurrentTrack] = useState("");
   const [nextTrack, setNextTrack] = useState("");
+
+  const player = getPlayer();
 
   useEffect(() => {
     setPlayerStateChangeCb(setState);
