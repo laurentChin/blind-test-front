@@ -5,6 +5,7 @@ import { Home } from "./pages/Home";
 import { Master } from "./pages/Master";
 
 import "./App.css";
+import { Board } from "./pages/Board";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/create-session" exact component={Master} />
+            <Route path="/board/:uuid" exact component={Board} />
           </Switch>
         </Router>
       </div>

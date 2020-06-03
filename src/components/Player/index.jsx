@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { SpotifyContext } from "../../contexts/Spotify";
 
-const Player = () => {
+const Player = ({ nextTrackCallback }) => {
   const { getPlayer, setPlayerStateChangeCb } = useContext(SpotifyContext);
 
   const [state, setState] = useState({});
@@ -30,10 +31,21 @@ const Player = () => {
         {state.paused ? "Play" : "Pause"}
       </button>
       {nextTrack && (
-        <button onClick={() => player.nextTrack()}>Play next track</button>
+        <button
+          onClick={() => {
+            player.nextTrack();
+            nextTrackCallback();
+          }}
+        >
+          Play next track
+        </button>
       )}
     </div>
   );
+};
+
+Player.propTypes = {
+  nextTrackCallback: PropTypes.func.isRequired,
 };
 
 export { Player };

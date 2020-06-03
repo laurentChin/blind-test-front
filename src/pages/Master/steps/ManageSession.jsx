@@ -75,9 +75,27 @@ const ManageSession = ({ sessionUuid }) => {
   };
 
   const releaseChallenger = (score) => {
-    socket.emit("setScore", { sessionUuid, score });
-    setChallengerUuid("");
-    player.resume();
+    player.getCurrentState().then((playerState) => {
+      const { name, artists } = playerState.track_window.current_track;
+      const track = {
+        name,
+        artists: artists
+          .map((artist) => artist.name)
+          .join(", ")
+          .trim(),
+      };
+      socket.emit("setScore", {
+        sessionUuid,
+        score,
+        track,
+      });
+      setChallengerUuid("");
+      player.resume();
+    });
+  };
+
+  const startNewChallenge = () => {
+    socket.emit("startNewChallenge", sessionUuid);
   };
 
   const startSession = () => {
@@ -92,7 +110,9 @@ const ManageSession = ({ sessionUuid }) => {
         {!hasSessionStart && deviceId && (
           <button onClick={() => startSession()}>Start the session</button>
         )}
-        {isPlayerReady && hasSessionStart && <Player />}
+        {isPlayerReady && hasSessionStart && (
+          <Player nextTrackCallback={startNewChallenge} />
+        )}
         {hasSessionStart && challengerUuid && (
           <button onClick={() => releaseChallenger(0)}>Wrong</button>
         )}
