@@ -21,8 +21,8 @@ const StepsNavigation = ({ currentStep, setStep }) => {
 };
 
 StepsNavigation.propTypes = {
-  currentStep: PropTypes.object,
-  setStep: PropTypes.func,
+  currentStep: PropTypes.object.isRequired,
+  setStep: PropTypes.func.isRequired,
 };
 
 export { StepsNavigation };
