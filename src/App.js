@@ -5,6 +5,7 @@ import { Home } from "./pages/Home";
 import { Master } from "./pages/Master";
 
 import "./App.css";
+import { Session } from "./pages/Session";
 import { Board } from "./pages/Board";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Switch>
             <Route path="/" exact component={Home} />
             <Route path="/create-session" exact component={Master} />
+            <Route path="/session/:uuid" exact component={Session} />
             <Route path="/board/:uuid" exact component={Board} />
           </Switch>
         </Router>
