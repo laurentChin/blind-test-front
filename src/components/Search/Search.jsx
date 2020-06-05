@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
-import { Result } from "../Result";
+import { Result } from "../Result/Result";
 import { SpotifyContext } from "../../contexts/Spotify";
 
 const Search = ({ excludedTracks, addTrackCallback }) => {

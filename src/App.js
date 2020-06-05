@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import { Home } from "./pages/Home";
-import { Master } from "./pages/Master";
+import { Home } from "./pages/Home/Home";
+import { Master } from "./pages/Master/Master";
 
 import "./App.css";
-import { Session } from "./pages/Session";
-import { Board } from "./pages/Board";
+import { Session } from "./pages/Session/Session";
+import { Board } from "./pages/Board/Board";
 
 function App() {
   return (

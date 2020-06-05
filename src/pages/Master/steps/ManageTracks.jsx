@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Search } from "../../../components/Search";
+import { Search } from "../../../components/Search/Search";
 import { SpotifyContext } from "../../../contexts/Spotify";
 import PropTypes from "prop-types";
 

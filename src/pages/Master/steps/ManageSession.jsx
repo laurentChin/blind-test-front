@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import QRCodeGenerator from "qrcode";
 import io from "socket.io-client";
 
-import { Player } from "../../../components/Player";
+import { Player } from "../../../components/Player/Player";
 import { SpotifyContext } from "../../../contexts/Spotify";
 
 const SPOTIFY_PLAYER_SRC = "https://sdk.scdn.co/spotify-player.js";
