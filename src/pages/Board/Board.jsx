@@ -14,25 +14,15 @@ let lockChallengeHandler = () => {};
 let challengeResultHandler = () => {};
 let startNewChallengeHandler = () => {};
 
-socket.on("challengersUpdate", (msg) => {
-  challengersUpdateHandler(msg);
-});
+socket.on("challengersUpdate", (msg) => challengersUpdateHandler(msg));
 
-socket.on("challengerRelease", (msg) => {
-  challengerReleaseHandler(msg);
-});
+socket.on("challengerRelease", (msg) => challengerReleaseHandler(msg));
 
-socket.on("lockChallenge", (msg) => {
-  lockChallengeHandler(msg);
-});
+socket.on("lockChallenge", (msg) => lockChallengeHandler(msg));
 
-socket.on("challengeResult", (msg) => {
-  challengeResultHandler(msg);
-});
+socket.on("challengeResult", (msg) => challengeResultHandler(msg));
 
-socket.on("startNewChallenge", (msg) => {
-  startNewChallengeHandler(msg);
-});
+socket.on("startNewChallenge", (msg) => startNewChallengeHandler(msg));
 
 const Board = () => {
   const { uuid } = useParams();

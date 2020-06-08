@@ -14,17 +14,11 @@ let socket = io(process.env.REACT_APP_SOCKET_URI);
 let challengersUpdateHandler = () => {};
 let lockChallengeHandler = () => {};
 
-socket.on("challengersUpdate", (msg) => {
-  challengersUpdateHandler(msg);
-});
+socket.on("challengersUpdate", (msg) => challengersUpdateHandler(msg));
 
-socket.on("lockChallenge", (msg) => {
-  lockChallengeHandler(msg);
-});
+socket.on("lockChallenge", (msg) => lockChallengeHandler(msg));
 
-socket.on("challengerRelease", (msg) => {
-  challengersUpdateHandler(msg);
-});
+socket.on("challengerRelease", (msg) => challengersUpdateHandler(msg));
 
 const ManageSession = ({ sessionUuid }) => {
   const spotifyContext = useContext(SpotifyContext);
