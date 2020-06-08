@@ -12,6 +12,8 @@ describe("<Home/>", () => {
       getByText("Create a new session. A valid Spotify account is required.")
     ).toBeTruthy();
 
-    expect(getByText("/Create/")).toBeTruthy();
+    expect(
+      /create-session$/.test(container.querySelector("a").href)
+    ).toBeTruthy();
   });
 });
