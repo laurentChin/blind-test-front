@@ -42,13 +42,17 @@ const CreateOrSelectPlaylist = ({
           value={sessionName}
           onChange={({ currentTarget: { value } }) => setSessionName(value)}
         />
-        <button onClick={createPlaylist}>Create the playlist</button>
+        <button data-testid="create-playlist-btn" onClick={createPlaylist}>
+          Create the playlist
+        </button>
       </div>
       <div className="Select-Playlist">
         <span>Choose an existing playlist :</span>
         {playlists.map((playlist) =>
           playlist.id === playlistId ? (
-            <span key={playlist.id}>{playlist.name}</span>
+            <span data-testid="selected-playlist" key={playlist.id}>
+              {playlist.name}
+            </span>
           ) : (
             <button
               key={playlist.id}
