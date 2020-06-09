@@ -67,6 +67,8 @@ const Board = () => {
   challengeResultHandler = (msg) => {
     if (msg.score > 0) {
       setTrack(msg.track);
+    } else {
+      setTrack(undefined);
     }
 
     setScore(msg.score);
@@ -97,13 +99,12 @@ const Board = () => {
       <div className="challenger-list">
         {challengers
           .sort((a, b) => b.score - a.score)
-          .map((challenger, index) => (
+          .map((challenger) => (
             <span
               key={challenger.uuid}
               className={challengerUuid === challenger.uuid ? "challenger" : ""}
             >
-              {challenger.name} | {challenger.score} |{" "}
-              {index === 0 ? "champion" : ""}
+              {challenger.name} | {challenger.score}
             </span>
           ))}
       </div>
