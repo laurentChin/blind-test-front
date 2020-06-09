@@ -23,7 +23,12 @@ const ManageTracks = ({ playlistId }) => {
       {tracks.map((track) => (
         <div key={track.id}>
           {track.name}{" "}
-          <button onClick={() => removeTrack(track.uri)}>Remove</button>
+          <button
+            data-testid={`delete-${track.uri}-btn`}
+            onClick={() => removeTrack(track.uri)}
+          >
+            Remove
+          </button>
         </div>
       ))}
       <Search
