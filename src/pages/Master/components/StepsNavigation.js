@@ -7,12 +7,18 @@ const StepsNavigation = ({ currentStep, setStep }) => {
   return (
     <div className="steps-navigation-container">
       {currentStep.previous && (
-        <button onClick={() => setStep(STEPS[currentStep.previous])}>
+        <button
+          data-testid="previous-step"
+          onClick={() => setStep(STEPS[currentStep.previous])}
+        >
           {STEPS_LABELS[currentStep.previous]}
         </button>
       )}
       {currentStep.next && (
-        <button onClick={() => setStep(STEPS[currentStep.next])}>
+        <button
+          data-testid="next-step"
+          onClick={() => setStep(STEPS[currentStep.next])}
+        >
           {STEPS_LABELS[currentStep.next]}
         </button>
       )}
