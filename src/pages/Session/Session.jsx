@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 } from "uuid";
+import PropTypes from "prop-types";
 
 import io from "socket.io-client";
 
@@ -19,11 +20,11 @@ socket.on("lockChallenge", (msg) => lockChallengeHandler(msg));
 
 socket.on("availableColorsUpdate", (msg) => availableColorsUpdateHandler(msg));
 
-const Session = () => {
+const Session = (props) => {
   const persistedSessionUuid = sessionStorage.getItem("sessionUuid");
   const { uuid } = useParams();
   const [name, setName] = useState("");
-  const [challengers, setChallengers] = useState([]);
+  const [challengers, setChallengers] = useState(props.challengers || []);
   const [inWaitingRoom, setInWaitingRoom] = useState(false);
   const [isChallengeLocked, setChallengeLock] = useState(false);
   const [challengerUuid, setChallengerUuid] = useState("");
@@ -35,7 +36,7 @@ const Session = () => {
   const [inSession, setInSession] = useState(
     playerUuid !== "-" && persistedSessionUuid === uuid
   );
-  const [colors, setColors] = useState([]);
+  const [colors, setColors] = useState(props.colors || []);
   const [playerColor, setPlayerColor] = useState(null);
 
   challengersUpdateHandler = setChallengers;
@@ -117,6 +118,7 @@ const Session = () => {
                 onClick={() => setPlayerColor(color)}
                 key={color}
                 style={{ backgroundColor: color }}
+                className="color-button"
               >
                 &nbsp;
               </button>
@@ -156,6 +158,11 @@ const Session = () => {
       </div>
     </div>
   );
+};
+
+Session.propTypes = {
+  colors: PropTypes.array,
+  challengers: PropTypes.array,
 };
 
 export { Session };
