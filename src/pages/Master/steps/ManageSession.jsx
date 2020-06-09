@@ -20,15 +20,19 @@ socket.on("lockChallenge", (msg) => lockChallengeHandler(msg));
 
 socket.on("challengerRelease", (msg) => challengersUpdateHandler(msg));
 
-const ManageSession = ({ sessionUuid }) => {
+const ManageSession = ({ sessionUuid, ...props }) => {
   const spotifyContext = useContext(SpotifyContext);
 
-  const [isPlayerScriptLoaded, setPlayerScriptLoadedState] = useState(false);
-  const [isPlayerReady, setPlayerReadyState] = useState(false);
-  const [player, setPlayer] = useState({});
+  const [isPlayerScriptLoaded, setPlayerScriptLoadedState] = useState(
+    props.isPlayerScriptLoaded || false
+  );
+  const [isPlayerReady, setPlayerReadyState] = useState(
+    props.isPlayerReady || false
+  );
+  const [player, setPlayer] = useState(props.player || {});
   const [challengers, setChallengers] = useState([]);
   const [challengerUuid, setChallengerUuid] = useState("");
-  const [deviceId, setDeviceId] = useState("");
+  const [deviceId, setDeviceId] = useState(props.deviceId || "");
   const [hasSessionStart, setSessionStartStatus] = useState(false);
 
   challengersUpdateHandler = setChallengers;
@@ -88,33 +92,48 @@ const ManageSession = ({ sessionUuid }) => {
     });
   };
 
-  const startNewChallenge = () => {
-    socket.emit("startNewChallenge", sessionUuid);
-  };
+  const startNewChallenge = () => socket.emit("startNewChallenge", sessionUuid);
 
-  const startSession = () => {
+  const startSession = () =>
     spotifyContext
       .startPlayer(deviceId)
       .then(() => setSessionStartStatus(true));
-  };
 
   return (
     <div className="Step Session-Step">
       <div className="controls-container">
         {!hasSessionStart && deviceId && (
-          <button onClick={() => startSession()}>Start the session</button>
+          <button
+            data-testid="start-session-btn"
+            onClick={() => startSession()}
+          >
+            Start the session
+          </button>
         )}
-        {isPlayerReady && hasSessionStart && (
+        {hasSessionStart && isPlayerReady && (
           <Player nextTrackCallback={startNewChallenge} />
         )}
         {hasSessionStart && challengerUuid && (
-          <button onClick={() => releaseChallenger(0)}>Wrong</button>
-        )}
-        {hasSessionStart && challengerUuid && (
-          <button onClick={() => releaseChallenger(0.5)}>Success .5pt</button>
-        )}
-        {hasSessionStart && challengerUuid && (
-          <button onClick={() => releaseChallenger(1)}>Success 1pt</button>
+          <>
+            <button
+              data-testid="challenge-button"
+              onClick={() => releaseChallenger(0)}
+            >
+              Wrong
+            </button>
+            <button
+              data-testid="challenge-button"
+              onClick={() => releaseChallenger(0.5)}
+            >
+              Success .5pt
+            </button>
+            <button
+              data-testid="challenge-button"
+              onClick={() => releaseChallenger(1)}
+            >
+              Success 1pt
+            </button>
+          </>
         )}
       </div>
       <div className="challenger-list">
@@ -145,6 +164,10 @@ const ManageSession = ({ sessionUuid }) => {
 
 ManageSession.propTypes = {
   sessionUuid: PropTypes.string.isRequired,
+  isPlayerScriptLoaded: PropTypes.bool,
+  isPlayerReady: PropTypes.bool,
+  deviceId: PropTypes.string,
+  player: PropTypes.object,
 };
 
 export { ManageSession };

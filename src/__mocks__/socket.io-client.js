@@ -13,11 +13,13 @@ function emit(name, data) {
   listeners.get(name).forEach((listener) => listener(data));
 }
 
+const _ioMethods = {
+  on,
+  emit,
+};
+
 function io() {
-  return {
-    on,
-    emit,
-  };
+  return _ioMethods;
 }
 
 export default io;
