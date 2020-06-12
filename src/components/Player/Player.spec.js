@@ -58,13 +58,13 @@ describe("<Player />", () => {
       nextTrack: jest.fn(),
     }));
 
-    const { getByText } = render(
+    const { getByTestId } = render(
       <SpotifyContext.Provider value={{ setPlayerStateChangeCb, getPlayer }}>
         <Player nextTrackCallback={() => {}} />
       </SpotifyContext.Provider>
     );
 
-    fireEvent.click(getByText("Play"));
+    fireEvent.click(getByTestId("toggle-play-pause-btn"));
 
     expect(mockTogglePlay).toHaveBeenCalled();
   });
@@ -79,13 +79,13 @@ describe("<Player />", () => {
       nextTrack: mockNextTrack,
     }));
 
-    const { getByText } = render(
+    const { getByTestId } = render(
       <SpotifyContext.Provider value={{ setPlayerStateChangeCb, getPlayer }}>
         <Player nextTrackCallback={mockNextTrackCallback} />
       </SpotifyContext.Provider>
     );
 
-    fireEvent.click(getByText("Play next track"));
+    fireEvent.click(getByTestId("play-next-btn"));
 
     expect(mockNextTrack).toHaveBeenCalled();
     expect(mockNextTrackCallback).toHaveBeenCalled();

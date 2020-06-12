@@ -5,6 +5,9 @@ import { useParams } from "react-router-dom";
 import QRCodeGenerator from "qrcode";
 import { getGif } from "../../helpers/Giphy";
 import { Gif } from "@giphy/react-components";
+import { ChallengerList } from "../../components/ChallengerList/ChallengerList";
+
+import "./Board.css";
 
 let socket = io(process.env.REACT_APP_SOCKET_URI);
 
@@ -81,34 +84,21 @@ const Board = () => {
   };
 
   return (
-    <div>
+    <div className="Board">
       {gif !== undefined && score !== undefined && (
-        <Gif gif={gif} width={300 * gif.ratio} height={300} />
+        <Gif className="gif" gif={gif} width={300 * gif.ratio} height={300} />
       )}
       {track !== undefined && (
-        <p>
+        <p className="track">
           <span className="current-song">{track.name}</span>
           <span className="current-song">{track.artists}</span>
         </p>
       )}
-      <span className="current-challenger">
-        {challengerUuid &&
-          challengers.find((challenger) => challengerUuid === challenger.uuid)
-            .name}
-      </span>
-      <div className="challenger-list">
-        {challengers
-          .sort((a, b) => b.score - a.score)
-          .map((challenger) => (
-            <span
-              key={challenger.uuid}
-              className={challengerUuid === challenger.uuid ? "challenger" : ""}
-            >
-              {challenger.name} | {challenger.score}
-            </span>
-          ))}
-      </div>
-      <canvas ref={qrCode} />
+      <ChallengerList
+        challengers={challengers}
+        challengerUuid={challengerUuid}
+      />
+      <canvas className="qrcode" ref={qrCode} />
     </div>
   );
 };

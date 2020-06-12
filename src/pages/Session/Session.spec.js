@@ -42,7 +42,9 @@ describe("<Session />", () => {
       <Router>
         <Session
           colors={["#e6194B", "#f58231"]}
-          challengers={[{ uuid: "qqqwqq-qeqeq-qeqw", name: "bob" }]}
+          challengers={[
+            { uuid: "qqqwqq-qeqeq-qeqw", name: "bob", color: "color" },
+          ]}
         />
       </Router>
     );
@@ -71,7 +73,9 @@ describe("<Session />", () => {
       <Router>
         <Session
           colors={["#e6194B", "#f58231"]}
-          challengers={[{ uuid: "qqqwqq-qeqeq-qeqw", name: "bob" }]}
+          challengers={[
+            { uuid: "qqqwqq-qeqeq-qeqw", name: "bob", color: "#e6194B" },
+          ]}
         />
       </Router>
     );
@@ -81,9 +85,15 @@ describe("<Session />", () => {
         target: { value: "qqqwqq-qeqeq-qeqw" },
       });
 
+      fireEvent.click(
+        container.querySelector("option[value='qqqwqq-qeqeq-qeqw']")
+      );
+
       await process.nextTick(() => {});
 
       fireEvent.click(getByText("Join"));
+
+      await process.nextTick(() => {});
 
       expect(getByText("Challenge")).toBeTruthy();
 

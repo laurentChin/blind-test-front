@@ -1,12 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
+import PropTypes from "prop-types";
+
+import { FaTrash } from "react-icons/fa";
+
 import { Search } from "../../../components/Search/Search";
 import { SpotifyContext } from "../../../contexts/Spotify";
-import PropTypes from "prop-types";
+
+import "./ManageTracks.css";
 
 const ManageTracks = ({ playlistId }) => {
   const spotifyContext = useContext(SpotifyContext);
 
   const [tracks, setTracks] = useState([]);
+  const [isSearchPopInVisible, setSearchPopInVisible] = useState(false);
 
   useEffect(() => {
     spotifyContext.getTracks(playlistId).then((tracks) => setTracks(tracks));
@@ -19,27 +25,40 @@ const ManageTracks = ({ playlistId }) => {
   };
 
   return (
-    <div className="Step Manage-Tracks">
-      {tracks.map((track) => (
-        <div key={track.id}>
-          {track.name}{" "}
-          <button
-            data-testid={`delete-${track.uri}-btn`}
-            onClick={() => removeTrack(track.uri)}
-          >
-            Remove
-          </button>
+    <>
+      <div className="Step Manage-Tracks">
+        {tracks.map((track) => (
+          <div className="track" key={track.id}>
+            {track.name}{" "}
+            <button
+              data-testid={`delete-${track.uri}-btn`}
+              onClick={() => removeTrack(track.uri)}
+              className="trash-button"
+            >
+              <FaTrash />
+            </button>
+          </div>
+        ))}
+        <button onClick={() => setSearchPopInVisible(true)}>Add</button>
+      </div>
+      {isSearchPopInVisible && (
+        <div className="search-pop-in">
+          <div
+            className="search-overlay"
+            onClick={() => setSearchPopInVisible(false)}
+          />
+          <Search
+            excludedTracks={tracks}
+            addTrackCallback={() => {
+              spotifyContext
+                .getTracks(playlistId)
+                .then((tracks) => setTracks(tracks));
+              setSearchPopInVisible(false);
+            }}
+          />
         </div>
-      ))}
-      <Search
-        excludedTracks={tracks}
-        addTrackCallback={() =>
-          spotifyContext
-            .getTracks(playlistId)
-            .then((tracks) => setTracks(tracks))
-        }
-      />
-    </div>
+      )}
+    </>
   );
 };
 

@@ -2,9 +2,13 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import QRCodeGenerator from "qrcode";
 import io from "socket.io-client";
+import { MdOpenInNew } from "react-icons/md";
 
 import { Player } from "../../../components/Player/Player";
 import { SpotifyContext } from "../../../contexts/Spotify";
+
+import "./ManageSession.css";
+import { ChallengerList } from "../../../components/ChallengerList/ChallengerList";
 
 const SPOTIFY_PLAYER_SRC = "https://sdk.scdn.co/spotify-player.js";
 const script = document.createElement("script");
@@ -104,6 +108,7 @@ const ManageSession = ({ sessionUuid, ...props }) => {
       <div className="controls-container">
         {!hasSessionStart && deviceId && (
           <button
+            className="start-session-btn"
             data-testid="start-session-btn"
             onClick={() => startSession()}
           >
@@ -114,40 +119,35 @@ const ManageSession = ({ sessionUuid, ...props }) => {
           <Player nextTrackCallback={startNewChallenge} />
         )}
         {hasSessionStart && challengerUuid && (
-          <>
+          <div className="challenge-buttons-container">
             <button
               data-testid="challenge-button"
+              className="challenge-button challenge-button-wrong"
               onClick={() => releaseChallenger(0)}
             >
               Wrong
             </button>
             <button
               data-testid="challenge-button"
+              className="challenge-button challenge-button-half"
               onClick={() => releaseChallenger(0.5)}
             >
               Success .5pt
             </button>
             <button
               data-testid="challenge-button"
+              className="challenge-button challenge-button-full"
               onClick={() => releaseChallenger(1)}
             >
               Success 1pt
             </button>
-          </>
+          </div>
         )}
       </div>
-      <div className="challenger-list">
-        {challengers
-          .sort((a, b) => b.score - a.score)
-          .map((challenger) => (
-            <span
-              key={challenger.uuid}
-              className={challengerUuid === challenger.uuid ? "challenger" : ""}
-            >
-              {challenger.name}
-            </span>
-          ))}
-      </div>
+      <ChallengerList
+        challengers={challengers}
+        challengerUuid={challengerUuid}
+      />
       <div className="QRCode">
         <canvas ref={qrCode} />
         <a
@@ -155,7 +155,7 @@ const ManageSession = ({ sessionUuid, ...props }) => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Open the board in a new Tab
+          Open the board <MdOpenInNew />
         </a>
       </div>
     </div>

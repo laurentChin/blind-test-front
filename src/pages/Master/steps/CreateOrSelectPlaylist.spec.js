@@ -12,6 +12,7 @@ describe("<CreateOrSelectPlaylist />", () => {
     const setCurrentPlaylist = jest.fn();
     const createPlaylist = jest.fn().mockResolvedValue({ id: "playlistId" });
     const getPlaylists = jest.fn().mockResolvedValue([]);
+    const setTitle = jest.fn();
     const { getByTestId, container } = render(
       <SpotifyContext.Provider
         value={{ createPlaylist, setCurrentPlaylist, getPlaylists }}
@@ -20,6 +21,7 @@ describe("<CreateOrSelectPlaylist />", () => {
           setPlaylistId={setPlaylistId}
           isAuthenticated={true}
           playlistId={""}
+          setTitle={setTitle}
         />
       </SpotifyContext.Provider>
     );
@@ -47,6 +49,7 @@ describe("<CreateOrSelectPlaylist />", () => {
       { id: "playlistId", name: "selectedPlaylist" },
       { id: "234567890", name: "notSelectedPlaylist" },
     ]);
+    const setTitle = jest.fn();
     const { getByTestId, container } = render(
       <SpotifyContext.Provider
         value={{ createPlaylist, setCurrentPlaylist, getPlaylists }}
@@ -55,6 +58,7 @@ describe("<CreateOrSelectPlaylist />", () => {
           setPlaylistId={setPlaylistId}
           isAuthenticated={true}
           playlistId={"playlistId"}
+          setTitle={setTitle}
         />
       </SpotifyContext.Provider>
     );
@@ -76,6 +80,7 @@ describe("<CreateOrSelectPlaylist />", () => {
       { id: "playlistId", name: "Playlist1" },
       { id: "234567890", name: "Playlist2" },
     ]);
+    const setTitle = jest.fn();
 
     const { getByText } = render(
       <SpotifyContext.Provider
@@ -85,6 +90,7 @@ describe("<CreateOrSelectPlaylist />", () => {
           setPlaylistId={setPlaylistId}
           isAuthenticated={true}
           playlistId={""}
+          setTitle={setTitle}
         />
       </SpotifyContext.Provider>
     );
@@ -105,6 +111,7 @@ describe("<CreateOrSelectPlaylist />", () => {
       { id: "playlistId", name: "Playlist1" },
       { id: "234567890", name: "Playlist2" },
     ]);
+    const setTitle = jest.fn();
 
     const { getByText, rerender } = render(
       <SpotifyContext.Provider
@@ -114,6 +121,7 @@ describe("<CreateOrSelectPlaylist />", () => {
           setPlaylistId={setPlaylistId}
           isAuthenticated={true}
           playlistId={playlistId}
+          setTitle={setTitle}
         />
       </SpotifyContext.Provider>
     );
@@ -132,6 +140,7 @@ describe("<CreateOrSelectPlaylist />", () => {
           setPlaylistId={setPlaylistId}
           isAuthenticated={true}
           playlistId={playlistId}
+          setTitle={setTitle}
         />
       </SpotifyContext.Provider>
     );

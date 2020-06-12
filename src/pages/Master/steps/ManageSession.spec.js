@@ -56,9 +56,9 @@ describe("<ManageSession />", () => {
         { uuid: "wuefgeew-82687234", name: "name2", score: 3 },
       ]);
       await process.nextTick(() => {});
-      expect(
-        container.querySelectorAll(".challenger-list span").length
-      ).toEqual(2);
+      expect(container.querySelectorAll(".challenger-list p").length).toEqual(
+        2
+      );
     });
   });
 

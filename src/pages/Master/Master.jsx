@@ -13,6 +13,7 @@ const SESSION_UUID = v4();
 const Master = () => {
   const spotifyContext = useContext(SpotifyContext);
 
+  const [title, setTitle] = useState("New session");
   const [isAuthenticated, setIsAuthenticated] = useState(
     spotifyContext.isAuthenticated
   );
@@ -47,13 +48,14 @@ const Master = () => {
 
   return (
     <div>
-      <p>New session</p>
+      <h2>{title}</h2>
       {step.name === STEPS.CREATE_OR_SELECT_PLAYLIST.name && (
         <CreateOrSelectPlaylist
           playlistId={playlistId}
           setPlaylistId={setPlaylistId}
           setStep={setStep}
           isAuthenticated={isAuthenticated}
+          setTitle={setTitle}
         />
       )}
       {step.name === STEPS.MANAGE_TRACKS.name && (
